@@ -1,0 +1,30 @@
+#!/usr/bin/php
+<?php
+
+require __DIR__ . '/../app.php';
+
+$app = new \PhpHooks();
+$app->setFiles(extractFiles());
+$app->run();
+
+function extractFiles()
+{
+    if (false === function_exists('exec')) {
+        throw new \RuntimeException('Function exec must be enabled!');
+    }
+
+    $path = array();
+    exec("git rev-parse --show-toplevel", $path);
+
+    $gitDir = current($path);
+
+    $output = array();
+    exec("git diff --cached --name-status --diff-filter=ACMR", $output);
+
+    $files = array_map(function ($v) use ($gitDir) {
+        $file = trim(str_replace(array('M', 'C', 'A', 'R'), '', $v));
+        return $gitDir . DIRECTORY_SEPARATOR . $file;
+    }, $output);
+
+    return $files;
+}
