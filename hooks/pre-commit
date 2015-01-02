@@ -1,10 +1,17 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../app.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-$app = new \PhpHooks();
+$configurationFile = getGitDir() . DIRECTORY_SEPARATOR . '.pre-commit.yml';
+
+$app = new \PhpHooks\Application();
 $app->setFiles(extractFiles());
+
+if (file_exists($configurationFile)) {
+    $app->updateConfiguration($configurationFile);
+}
+
 $app->run();
 
 function extractFiles()
@@ -13,10 +20,7 @@ function extractFiles()
         throw new \RuntimeException('Function exec must be enabled!');
     }
 
-    $path = array();
-    exec("git rev-parse --show-toplevel", $path);
-
-    $gitDir = current($path);
+    $gitDir = getGitDir();
 
     $output = array();
     exec("git diff --cached --name-status --diff-filter=ACMR", $output);
@@ -27,4 +31,16 @@ function extractFiles()
     }, $output);
 
     return $files;
+}
+
+function getGitDir()
+{
+    if (false === function_exists('exec')) {
+        throw new \RuntimeException('Function exec must be enabled!');
+    }
+
+    $path = array();
+    exec("git rev-parse --show-toplevel", $path);
+
+    return current($path);
 }
