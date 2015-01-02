@@ -9,7 +9,7 @@ use Symfony\Component\Process\ProcessBuilder;
  *
  * @package PhpHooks\Checks
  */
-class Phpmd
+class Phpmd extends AbstractCheck
 {
     /**
      * @param string $file
@@ -26,11 +26,6 @@ class Phpmd
             ->setPrefix(__DIR__ . '/../../../bin/phpmd')
             ->setArguments(array($file, 'text', $ruleset));
 
-        $process = $processBuilder->getProcess();
-        $process->run();
-
-        if (false === $process->isSuccessful()) {
-            throw new \RuntimeException(trim($process->getOutput()));
-        }
+        self::run($processBuilder);
     }
 }

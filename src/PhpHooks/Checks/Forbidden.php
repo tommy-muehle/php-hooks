@@ -25,7 +25,8 @@ class Forbidden
                 continue;
             }
 
-            throw new \RuntimeException(sprintf('Forbidden method "%s" found in file "%s"!', $matches[0], $file));
+            $message = sprintf('Forbidden method "%s" found in file "%s"!', $matches[0], $file);
+            throw new \RuntimeException($message);
         }
     }
 }

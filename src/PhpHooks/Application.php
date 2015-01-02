@@ -7,6 +7,7 @@ use PhpHooks\Checks\Phpcpd;
 use PhpHooks\Checks\Phpcs;
 use PhpHooks\Checks\Phplint;
 use PhpHooks\Checks\Phpmd;
+use PhpHooks\Checks\Phpunit;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,6 +42,11 @@ class Application extends BaseApplication
     protected $configuration;
 
     /**
+     * @var \Symfony\Component\Console\Helper\FormatterHelper
+     */
+    protected $formatter;
+
+    /**
      * @param string $name
      * @param string $version
      */
@@ -48,6 +54,7 @@ class Application extends BaseApplication
     {
         parent::__construct($name, $version);
         $this->configuration = new Configuration();
+        $this->formatter = $this->getHelperSet()->get('formatter');
     }
 
     /**
@@ -77,41 +84,56 @@ class Application extends BaseApplication
     {
         $output->writeln(self::$logo);
 
-        /* @var $formatter \Symfony\Component\Console\Helper\FormatterHelper */
-        $formatter = $this->getHelperSet()->get('formatter');
+        if (count($this->files) === 0) {
+            $output->writeln('<info>No files given to check.</info>');
+
+            return;
+        }
 
         try {
-            /* @var string $file */
-            foreach ($this->files as $file) {
-
-                if (substr($file, -4, 4) !== '.php') {
-                    continue;
-                }
-
-                $output->writeln($formatter->formatSection('forbidden', $file));
-                Forbidden::execute($file, $this->configuration['forbidden']['methods']);
-
-                $output->writeln($formatter->formatSection('phplint', $file));
-                Phplint::execute($file);
-
-                $output->writeln($formatter->formatSection('phpmd', $file));
-                Phpmd::execute($file, $this->configuration['phpmd']['ruleset']);
-
-                $output->writeln($formatter->formatSection('phpcs', $file));
-                Phpcs::execute($file, $this->configuration['phpcs']['standard']);
-
-                $output->writeln($formatter->formatSection('phpcpd', $file));
-                Phpcpd::execute($file);
-            }
+            $this->executeChecks($output);
 
             exit(0);
 
         } catch (\Exception $e) {
-            $errorMessages = array('Error!', $e->getMessage());
-            $formattedBlock = $formatter->formatBlock($errorMessages, 'error');
+            $formattedBlock = $this->formatter->formatBlock($e->getMessage(), 'error');
             $output->writeln($formattedBlock);
 
             exit(1);
+        }
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function executeChecks(OutputInterface $output)
+    {
+        /* @var string $file */
+        foreach ($this->files as $file) {
+
+            if (substr($file, -4, 4) !== '.php') {
+                continue;
+            }
+
+            $output->writeln($this->formatter->formatSection('forbidden', $file));
+            Forbidden::execute($file, $this->configuration['forbidden']['methods']);
+
+            $output->writeln($this->formatter->formatSection('phplint', $file));
+            Phplint::execute($file);
+
+            $output->writeln($this->formatter->formatSection('phpmd', $file));
+            Phpmd::execute($file, $this->configuration['phpmd']['ruleset']);
+
+            $output->writeln($this->formatter->formatSection('phpcs', $file));
+            Phpcs::execute($file, $this->configuration['phpcs']['standard']);
+
+            $output->writeln($this->formatter->formatSection('phpcpd', $file));
+            Phpcpd::execute($file);
+        }
+
+        if (false === is_null($this->configuration['phpunit']['configuration'])) {
+            $output->writeln($this->formatter->formatSection('phpunit', 'Run tests ...'));
+            Phpunit::execute($this->configuration['phpunit']['configuration']);
         }
     }
 }

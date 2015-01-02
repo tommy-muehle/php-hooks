@@ -9,7 +9,7 @@ use Symfony\Component\Process\ProcessBuilder;
  *
  * @package PhpHooks\Checks
  */
-class Phpcpd
+class Phpcpd extends AbstractCheck
 {
     /**
      * @param string $file
@@ -22,11 +22,6 @@ class Phpcpd
             ->setPrefix(__DIR__ . '/../../../bin/phpcpd')
             ->setArguments(array($file));
 
-        $process = $processBuilder->getProcess();
-        $process->run();
-
-        if (false === $process->isSuccessful()) {
-            throw new \RuntimeException(trim($process->getErrorOutput()));
-        }
+        self::run($processBuilder);
     }
 }

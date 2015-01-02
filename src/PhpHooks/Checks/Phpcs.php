@@ -9,7 +9,7 @@ use Symfony\Component\Process\ProcessBuilder;
  *
  * @package PhpHooks\Checks
  */
-class Phpcs
+class Phpcs extends AbstractCheck
 {
     /**
      * @param string $file
@@ -24,11 +24,6 @@ class Phpcs
             ->add(sprintf('--standard=%s', $standard))
             ->add($file);
 
-        $process = $processBuilder->getProcess();
-        $process->run();
-
-        if (false === $process->isSuccessful()) {
-            throw new \RuntimeException(trim($process->getOutput()));
-        }
+        self::run($processBuilder);
     }
 }

@@ -21,6 +21,9 @@ class Configuration implements \ArrayAccess
         ),
         'forbidden' => array(
             'methods' => array()
+        ),
+        'phpunit' => array(
+            'configuration' => null
         )
     );
 
@@ -85,7 +88,7 @@ class Configuration implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        // TODO: Implement offsetSet() method.
+        throw new \BadMethodCallException('Setting an offset is not possible in configuration!');
     }
 
     /**
@@ -93,6 +96,6 @@ class Configuration implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        // TODO: Implement offsetUnset() method.
+        throw new \BadMethodCallException('Unset an offset is not possible in configuration!');
     }
 }
