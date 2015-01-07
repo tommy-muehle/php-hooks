@@ -20,10 +20,39 @@ Every change (or changes) that you do was checked at the time through:
 
 ### Requirements
 
-* PHP installed and globally available
 * Git installed
+* PHP installed and globally available
+* Composer is available
 
 ### Introduction
+
+Check out the PhpHooks repository to a save place:
+
+    git clone https://github.com/tommy-muehle/php-hooks.git
+    
+Get in the cloned directory and do a composer update:
+ 
+    # in /path/to/php-hooks
+    composer update
+    
+Make the hook executable:
+    
+    # in /path/to/php-hooks
+    chmod +x ./hooks/pre-commit
+    
+Test if everything works fine:
+
+    # in /path/to/php-hooks
+    ./hooks/pre-commit
+    
+    # shows
+      ____  _           _   _             _
+     |  _ \| |__  _ __ | | | | ___   ___ | | _____
+     | |_) | |_ \| |_ \| |_| |/ _ \ / _ \| |/ / __|
+     |  __/| | | | |_) |  _  | (_) | (_) |   <\__ \
+     |_|   |_| |_| .__/|_| |_|\___/ \___/|_|\_\___/
+                 |_|
+    No files given to check.
 
 In the repository where you want to use the hook just do the following:
 
