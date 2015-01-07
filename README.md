@@ -13,6 +13,8 @@ Every change (or changes) that you do was checked at the time through:
 * [phpmd](http://phpmd.org/) - Check for some code violations like codesize or naming
 * [phpcs](https://github.com/squizlabs/PHP_CodeSniffer) - Check for coding standard violations
 * [phpcpd](https://github.com/sebastianbergmann/phpcpd) - Check for duplicate code
+* [phpunit](https://phpunit.de/) - Check tests (only if configuration file is set!)
+* [security-checker](https://github.com/sensiolabs/security-checker) - Check a given composer.lock file for known security vulnerabilities
 
 ## Install
 
@@ -48,3 +50,5 @@ So you can customize the checks with using a ".pre-commit.yml" file in your proj
     forbidden:
       # Add here methods that not allowed to commit like var_dump
       methods: ["evalMethod", "printEvalResults"]
+    phpunit:
+      configuration: /path/to/phpunit.xml
