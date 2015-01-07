@@ -2,16 +2,11 @@
 
 namespace PhpHooks;
 
-use PhpHooks\Checks\Forbidden;
-use PhpHooks\Checks\Phpcpd;
-use PhpHooks\Checks\Phpcs;
-use PhpHooks\Checks\Phplint;
-use PhpHooks\Checks\Phpmd;
-use PhpHooks\Checks\Phpunit;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use PhpHooks\Checks;
 
 /**
  * Class Application
@@ -111,29 +106,34 @@ class Application extends BaseApplication
         /* @var string $file */
         foreach ($this->files as $file) {
 
+            if (substr($file, -13, 13) === 'composer.lock') {
+                Checks\SecurityChecker::execute($file);
+                continue;
+            }
+
             if (substr($file, -4, 4) !== '.php') {
                 continue;
             }
 
             $output->writeln($this->formatter->formatSection('forbidden', $file));
-            Forbidden::execute($file, $this->configuration['forbidden']['methods']);
+            Checks\Forbidden::execute($file, $this->configuration['forbidden']['methods']);
 
             $output->writeln($this->formatter->formatSection('phplint', $file));
-            Phplint::execute($file);
+            Checks\Phplint::execute($file);
 
             $output->writeln($this->formatter->formatSection('phpmd', $file));
-            Phpmd::execute($file, $this->configuration['phpmd']['ruleset']);
+            Checks\Phpmd::execute($file, $this->configuration['phpmd']['ruleset']);
 
             $output->writeln($this->formatter->formatSection('phpcs', $file));
-            Phpcs::execute($file, $this->configuration['phpcs']['standard']);
+            Checks\Phpcs::execute($file, $this->configuration['phpcs']['standard']);
 
             $output->writeln($this->formatter->formatSection('phpcpd', $file));
-            Phpcpd::execute($file);
+            Checks\Phpcpd::execute($file);
         }
 
         if (false === is_null($this->configuration['phpunit']['configuration'])) {
             $output->writeln($this->formatter->formatSection('phpunit', 'Run tests ...'));
-            Phpunit::execute($this->configuration['phpunit']['configuration']);
+            Checks\Phpunit::execute($this->configuration['phpunit']['configuration']);
         }
     }
 }
