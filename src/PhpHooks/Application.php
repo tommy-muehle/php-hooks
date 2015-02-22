@@ -101,7 +101,7 @@ class Application extends BaseApplication
             return;
         }
 
-            /* @var $command \Symfony\Component\Console\Command\Command */
+        /* @var $command \Symfony\Component\Console\Command\Command */
         foreach ($this->getDefaultCommands() as $command) {
 
             if (false === $this->configuration[$command->getName()]['enabled']) {
@@ -116,11 +116,6 @@ class Application extends BaseApplication
 
                 exit(1);
             }
-        }
-
-        if (true === $this->configuration['phpunit']['enabled']) {
-            $command = new Command\PhpunitCommand();
-            $command->run($input, $output);
         }
 
         $output->writeln('<info>Well done!</info>');
@@ -138,7 +133,8 @@ class Application extends BaseApplication
             new Command\PhpcpdCommand(),
             new Command\PhpmdCommand(),
             new Command\ForbiddenCommand(),
-            new Command\SecurityCheckerCommand()
+            new Command\SecurityCheckerCommand(),
+            new Command\PhpunitCommand()
         ];
     }
 
