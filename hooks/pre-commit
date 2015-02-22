@@ -15,6 +15,7 @@ require $loader;
 
 use PhpHooks\Utility\GitUtility;
 use PhpHooks\Application;
+use Symfony\Component\Yaml\Yaml;
 
 $app = new Application();
 $app->setFiles(GitUtility::extractFiles());
@@ -22,7 +23,8 @@ $app->setFiles(GitUtility::extractFiles());
 $configurationFile = GitUtility::getGitDir() . DIRECTORY_SEPARATOR . '.pre-commit.yml';
 
 if (file_exists($configurationFile)) {
-    $app->updateConfiguration($configurationFile);
+    $configuration = Yaml::parse($configurationFile);
+    $app->getConfiguration()->merge($configuration);
 }
 
 $app->run();

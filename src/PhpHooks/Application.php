@@ -3,10 +3,12 @@
 namespace PhpHooks;
 
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
-use PhpHooks\Checks;
+use PhpHooks\Command;
 
 /**
  * Class Application
@@ -29,7 +31,7 @@ class Application extends BaseApplication
     /**
      * @var array
      */
-    protected $files = array();
+    protected $files = [];
 
     /**
      * @var Configuration
@@ -45,7 +47,7 @@ class Application extends BaseApplication
      * @param string $name
      * @param string $version
      */
-    public function __construct($name = 'PhpHooks', $version = '1.0')
+    public function __construct($name = 'PhpHooks', $version = '1.1')
     {
         parent::__construct($name, $version);
         $this->configuration = new Configuration();
@@ -55,18 +57,33 @@ class Application extends BaseApplication
     /**
      * @param array $files
      */
-    public function setFiles(array $files = array())
+    public function setFiles(array $files = [])
     {
         $this->files = $files;
     }
 
     /**
-     * @param string $file
+     * @param Configuration $configuration
      */
-    public function updateConfiguration($file)
+    public function setConfiguration(Configuration $configuration)
     {
-        $configuration = Yaml::parse($file);
-        $this->configuration->merge($configuration);
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFiles()
+    {
+        return $this->files;
     }
 
     /**
@@ -79,61 +96,62 @@ class Application extends BaseApplication
     {
         $output->writeln(self::$logo);
 
-        if (count($this->files) === 0) {
+        if (0 === count($this->files)) {
             $output->writeln('<info>No files given to check.</info>');
-
             return;
         }
 
-        try {
-            $this->executeChecks($output);
+            /* @var $command \Symfony\Component\Console\Command\Command */
+        foreach ($this->getDefaultCommands() as $command) {
 
-            exit(0);
+            if (false === $this->configuration[$command->getName()]['enabled']) {
+                continue;
+            }
 
-        } catch (\Exception $e) {
-            $formattedBlock = $this->formatter->formatBlock($e->getMessage(), 'error');
-            $output->writeln($formattedBlock);
+            try {
+                $command->run($input, $output);
+            } catch (\Exception $e) {
+                $formattedBlock = $this->formatter->formatBlock($e->getMessage(), 'error');
+                $output->writeln($formattedBlock);
 
-            exit(1);
+                exit(1);
+            }
         }
+
+        $output->writeln('<info>Well done!</info>');
+        exit(0);
     }
 
     /**
+     * @return array
+     */
+    protected function getDefaultCommands()
+    {
+        return [
+            new Command\PhplintCommand(),
+            new Command\PhpcsCommand(),
+            new Command\PhpcpdCommand(),
+            new Command\PhpmdCommand(),
+            new Command\ForbiddenCommand(),
+            new Command\SecurityCheckerCommand()
+        ];
+    }
+
+    /**
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function executeChecks(OutputInterface $output)
+    protected function configureIO(InputInterface $input, OutputInterface $output)
     {
-        /* @var string $file */
-        foreach ($this->files as $file) {
+        parent::configureIO($input, $output);
 
-            if (substr($file, -13, 13) === 'composer.lock') {
-                Checks\SecurityChecker::execute($file);
-                continue;
-            }
+        $input->bind(new InputDefinition([
+            new InputArgument('configuration'),
+            new InputArgument('files'),
+            new InputOption('verbose', '-v', InputOption::VALUE_OPTIONAL, '', true)
+        ]));
 
-            if (substr($file, -4, 4) !== '.php') {
-                continue;
-            }
-
-            $output->writeln($this->formatter->formatSection('forbidden', $file));
-            Checks\Forbidden::execute($file, $this->configuration['forbidden']['methods']);
-
-            $output->writeln($this->formatter->formatSection('phplint', $file));
-            Checks\Phplint::execute($file);
-
-            $output->writeln($this->formatter->formatSection('phpmd', $file));
-            Checks\Phpmd::execute($file, $this->configuration['phpmd']['ruleset']);
-
-            $output->writeln($this->formatter->formatSection('phpcs', $file));
-            Checks\Phpcs::execute($file, $this->configuration['phpcs']['standard']);
-
-            $output->writeln($this->formatter->formatSection('phpcpd', $file));
-            Checks\Phpcpd::execute($file);
-        }
-
-        if (false === is_null($this->configuration['phpunit']['configuration'])) {
-            $output->writeln($this->formatter->formatSection('phpunit', 'Run tests ...'));
-            Checks\Phpunit::execute($this->configuration['phpunit']['configuration']);
-        }
+        $input->setArgument('configuration', $this->configuration);
+        $input->setArgument('files', $this->files);
     }
 }

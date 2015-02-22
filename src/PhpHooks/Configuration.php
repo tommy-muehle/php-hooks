@@ -12,50 +12,44 @@ class Configuration implements \ArrayAccess
     /**
      * @var array
      */
-    protected $configuration = array(
-        'phpmd' => array(
+    protected $configuration = [
+        'phplint' => [
+            'enabled' => true
+        ],
+        'phpmd' => [
+            'enabled' => true,
             'ruleset' => 'codesize'
-        ),
-        'phpcs' => array(
+        ],
+        'phpcs' => [
+            'enabled' => true,
             'standard' => 'PSR1'
-        ),
-        'forbidden' => array(
-            'methods' => array()
-        ),
-        'phpunit' => array(
+        ],
+        'phpcpd' => [
+            'enabled' => true
+        ],
+        'forbidden' => [
+            'enabled' => true,
+            'methods' => ['var_dump', 'print_r', 'die']
+        ],
+        'phpunit' => [
+            'enabled' => true,
             'configuration' => null
-        )
-    );
-
-    /**
-     * @param array $fileConfiguration
-     *
-     * @return array
-     */
-    public function merge(array $fileConfiguration = array())
-    {
-        $this->configuration = $this->mergeConfigurationArrays(
-            $this->configuration, $fileConfiguration
-        );
-    }
+        ],
+        'security-checker' => [
+            'enabled' => true
+        ]
+    ];
 
     /**
      * @param array $configuration
-     * @param array $newConfiguration
      *
      * @return array
      */
-    protected function mergeConfigurationArrays(array $configuration, array $newConfiguration)
+    public function merge(array $configuration = [])
     {
-        foreach ($newConfiguration as $key => $value) {
-            if (array_key_exists($key, $configuration) && is_array($value)) {
-                $configuration[$key] = $this->mergeConfigurationArrays($configuration[$key], $newConfiguration[$key]);
-            } else {
-                $configuration[$key] = $value;
-            }
-        }
-
-        return $configuration;
+        $this->configuration = $this->mergeConfigurationArrays(
+            $this->configuration, $configuration
+        );
     }
 
     /**
@@ -88,7 +82,7 @@ class Configuration implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException('Setting an offset is not possible in configuration!');
+        $this->configuration[$offset] = $value;
     }
 
     /**
@@ -96,6 +90,27 @@ class Configuration implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException('Unset an offset is not possible in configuration!');
+        if (isset($this->configuration[$offset])) {
+            unset($this->configuration[$offset]);
+        }
+    }
+
+    /**
+     * @param array $configuration
+     * @param array $newConfiguration
+     *
+     * @return array
+     */
+    protected function mergeConfigurationArrays(array $configuration, array $newConfiguration)
+    {
+        foreach ($newConfiguration as $key => $value) {
+            if (array_key_exists($key, $configuration) && is_array($value)) {
+                $configuration[$key] = $this->mergeConfigurationArrays($configuration[$key], $newConfiguration[$key]);
+            } else {
+                $configuration[$key] = $value;
+            }
+        }
+
+        return $configuration;
     }
 }

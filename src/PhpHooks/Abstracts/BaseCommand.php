@@ -1,20 +1,21 @@
 <?php
 
-namespace PhpHooks\Checks;
+namespace PhpHooks\Abstracts;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
- * Class AbstractCheck
+ * Class BaseCommand
  *
- * @package PhpHooks\Checks
+ * @package PhpHooks\Abstracts
  */
-abstract class AbstractCheck
+abstract class BaseCommand extends Command
 {
     /**
      * @param ProcessBuilder $processBuilder
      */
-    public static function run(ProcessBuilder $processBuilder)
+    public function doExecute(ProcessBuilder $processBuilder)
     {
         $process = $processBuilder->getProcess();
         $process->run();
