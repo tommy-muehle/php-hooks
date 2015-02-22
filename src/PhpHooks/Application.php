@@ -118,6 +118,11 @@ class Application extends BaseApplication
             }
         }
 
+        if (true === $this->configuration['phpunit']['enabled']) {
+            $command = new Command\PhpunitCommand();
+            $command->run($input, $output);
+        }
+
         $output->writeln('<info>Well done!</info>');
         exit(0);
     }
