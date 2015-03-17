@@ -14,6 +14,9 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class SecurityCheckerCommand extends BaseCommand
 {
+    /**
+     * Configures the current command.
+     */
     protected function configure()
     {
         $this
@@ -33,13 +36,15 @@ class SecurityCheckerCommand extends BaseCommand
             ->setPrefix(__DIR__ . '/../../../bin/security-checker')
             ->add('security:check');
 
-        foreach ($input->getArgument('files') as $file) {
+        $files = unserialize($input->getArgument('files'));
+
+        foreach ($files as $file) {
             if (substr($file, -13, 13) !== 'composer.lock') {
                 continue;
             }
 
             $processBuilder->add($file);
-            parent::doExecute($processBuilder);
+            $this->doExecute($processBuilder);
         }
     }
 }

@@ -31,7 +31,7 @@ class PhpunitCommand extends BaseCommand
     public function run(InputInterface $input, OutputInterface $output)
     {
         /* @var $configuration \PhpHooks\Configuration */
-        $configuration = $input->getArgument('configuration');
+        $configuration = unserialize($input->getArgument('configuration'));
 
         if (false === file_exists($configuration['phpunit']['configuration'])) {
             return;
@@ -43,6 +43,6 @@ class PhpunitCommand extends BaseCommand
             ->add('--configuration')
             ->add($configuration['phpunit']['configuration']);
 
-        parent::doExecute($processBuilder);
+        $this->doExecute($processBuilder);
     }
 }

@@ -32,20 +32,21 @@ class PhpcsCommand extends BaseCommand
     public function run(InputInterface $input, OutputInterface $output)
     {
         /* @var $configuration \PhpHooks\Configuration */
-        $configuration = $input->getArgument('configuration');
+        $configuration = unserialize($input->getArgument('configuration'));
+        $files = unserialize($input->getArgument('files'));
 
         $processBuilder = new ProcessBuilder();
         $processBuilder
             ->setPrefix(__DIR__ . '/../../../bin/phpcs')
             ->add(sprintf('--standard=%s', $configuration['phpcs']['standard']));
 
-        foreach ($input->getArgument('files') as $file) {
+        foreach ($files as $file) {
             if (substr($file, -4, 4) !== '.php') {
                 continue;
             }
 
             $processBuilder->add($file);
-            parent::doExecute($processBuilder);
+            $this->doExecute($processBuilder);
         }
     }
 }

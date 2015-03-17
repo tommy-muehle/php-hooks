@@ -14,6 +14,9 @@ use Symfony\Component\Process\ProcessBuilder;
  */
 class PhplintCommand extends BaseCommand
 {
+    /**
+     * Configures the current command.
+     */
     protected function configure()
     {
         $this
@@ -33,13 +36,15 @@ class PhplintCommand extends BaseCommand
             ->setPrefix('php')
             ->add('-l');
 
-        foreach ($input->getArgument('files') as $file) {
+        $files = unserialize($input->getArgument('files'));
+
+        foreach ($files as $file) {
             if (substr($file, -4, 4) !== '.php') {
                 continue;
             }
 
             $processBuilder->add($file);
-            parent::doExecute($processBuilder);
+            $this->doExecute($processBuilder);
         }
     }
 }

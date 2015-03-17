@@ -90,7 +90,7 @@ class Application extends BaseApplication
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return void
+     * @return int
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
@@ -98,7 +98,7 @@ class Application extends BaseApplication
 
         if (0 === count($this->files)) {
             $output->writeln('<info>No files given to check.</info>');
-            return;
+            return 0;
         }
 
         /* @var $command \Symfony\Component\Console\Command\Command */
@@ -114,12 +114,13 @@ class Application extends BaseApplication
                 $formattedBlock = $this->formatter->formatBlock($e->getMessage(), 'error');
                 $output->writeln($formattedBlock);
 
-                exit(1);
+                return 1;
             }
         }
 
         $output->writeln('<info>Well done!</info>');
-        exit(0);
+
+        return 0;
     }
 
     /**
@@ -152,7 +153,7 @@ class Application extends BaseApplication
             new InputOption('verbose', '-v', InputOption::VALUE_OPTIONAL, '', true)
         ]));
 
-        $input->setArgument('configuration', $this->configuration);
-        $input->setArgument('files', $this->files);
+        $input->setArgument('configuration', serialize($this->configuration));
+        $input->setArgument('files', serialize($this->files));
     }
 }

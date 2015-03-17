@@ -35,13 +35,15 @@ class PhpcpdCommand extends BaseCommand
         $processBuilder
             ->setPrefix(__DIR__ . '/../../../bin/phpcpd');
 
-        foreach ($input->getArgument('files') as $file) {
+        $files = unserialize($input->getArgument('files'));
+
+        foreach ($files as $file) {
             if (substr($file, -4, 4) !== '.php') {
                 continue;
             }
 
             $processBuilder->add($file);
-            parent::doExecute($processBuilder);
+            $this->doExecute($processBuilder);
         }
     }
 }
