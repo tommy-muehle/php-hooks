@@ -1,6 +1,10 @@
 PhpHooks
 =========
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Build Status](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/?branch=master)
+
 PhpHooks is a collection of some useful [__customizable__](#customize) checks that you can use 
 as [git pre-commit hook](http://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) before you commit some changes.
 
