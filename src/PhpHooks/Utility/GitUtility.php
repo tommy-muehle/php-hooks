@@ -30,7 +30,7 @@ class GitUtility
         $output = array();
         exec("git diff --cached --name-status --diff-filter=ACMR", $output);
 
-        $files = array_map(function ($v) {
+        $files = array_map(function($v) {
             $file = trim(preg_replace('/^([ACMR]{1})\s{1,}/', '', $v));
             return self::getGitDir() . DIRECTORY_SEPARATOR . $file;
         }, $output);
