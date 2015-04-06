@@ -22,7 +22,7 @@ class Configuration implements \ArrayAccess
         ],
         'phpcs' => [
             'enabled' => true,
-            'standard' => 'PSR1'
+            'standard' => 'PSR2'
         ],
         'phpcpd' => [
             'enabled' => true
