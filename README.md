@@ -2,7 +2,7 @@ PhpHooks
 =========
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/build-status/master)
+[![Build Status](https://travis-ci.org/tommy-muehle/php-hooks.svg?branch=master)](https://travis-ci.org/tommy-muehle/php-hooks)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/?branch=master)
 [![Code Climate](https://codeclimate.com/github/tommy-muehle/php-hooks/badges/gpa.svg)](https://codeclimate.com/github/tommy-muehle/php-hooks)
 [![Test Coverage](https://codeclimate.com/github/tommy-muehle/php-hooks/badges/coverage.svg)](https://codeclimate.com/github/tommy-muehle/php-hooks)
