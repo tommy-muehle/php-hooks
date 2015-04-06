@@ -2,16 +2,16 @@
 
 namespace PhpHooks\Tests\Command;
 
-use PhpHooks\Command\PhplintCommand;
+use PhpHooks\Command\PhpmdCommand;
 use PhpHooks\Tests\CommandTestCase;
 
 /**
- * Class PhplintCommandTest
+ * Class PhpmdCommandTest
  *
- * @coversDefaultClass \PhpHooks\Command\PhplintCommand
+ * @coversDefaultClass \PhpHooks\Command\PhpmdCommand
  * @package PhpHooks\Tests\Command
  */
-class PhplintCommandTest extends CommandTestCase
+class PhpmdCommandTest extends CommandTestCase
 {
     /**
      * @covers ::run
@@ -19,16 +19,16 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testRun()
     {
-        $invalidFile = __DIR__ . '/../Fixtures/Invalid.php';
+        $invalidFile = __DIR__ . '/../Fixtures/LargeMethod.php';
 
         $input = $this->input;
         $input->setArgument('files', serialize([$invalidFile]));
 
-        $command = new PhplintCommand();
+        $command = new PhpmdCommand();
 
         $this->setExpectedException(
             'RuntimeException',
-            'PHP Parse error:  syntax error, unexpected end of file, expecting \',\' or \';\' in ' . $invalidFile . ' on line 3'
+            'The method example() has a Cyclomatic Complexity of 11. The configured cyclomatic complexity threshold is 10.'
         );
 
         $command->run($input, $this->output);
@@ -39,7 +39,7 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testRunWithoutPhpFiles()
     {
-        $this->runWithoutPhpFiles(new PhplintCommand());
+        $this->runWithoutPhpFiles(new PhpmdCommand());
     }
 
     /**
@@ -47,7 +47,7 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testConfigure()
     {
-        $command = new PhplintCommand();
-        $this->assertEquals('phplint', $command->getName());
+        $command = new PhpmdCommand();
+        $this->assertEquals('phpmd', $command->getName());
     }
 }

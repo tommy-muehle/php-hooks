@@ -5,17 +5,10 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="vendor/autoload.php"
         >
     <testsuites>
-        <testsuite name="PhpHooks">
-            <directory>tests</directory>
+        <testsuite name="TestClass">
+            <file>./TestClass.php</file>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
 </phpunit>

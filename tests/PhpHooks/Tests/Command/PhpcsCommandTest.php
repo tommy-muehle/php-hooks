@@ -2,16 +2,16 @@
 
 namespace PhpHooks\Tests\Command;
 
-use PhpHooks\Command\PhplintCommand;
+use PhpHooks\Command\PhpcsCommand;
 use PhpHooks\Tests\CommandTestCase;
 
 /**
- * Class PhplintCommandTest
+ * Class PhpcsCommandTest
  *
- * @coversDefaultClass \PhpHooks\Command\PhplintCommand
+ * @coversDefaultClass \PhpHooks\Command\PhpcsCommand
  * @package PhpHooks\Tests\Command
  */
-class PhplintCommandTest extends CommandTestCase
+class PhpcsCommandTest extends CommandTestCase
 {
     /**
      * @covers ::run
@@ -19,16 +19,16 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testRun()
     {
-        $invalidFile = __DIR__ . '/../Fixtures/Invalid.php';
+        $invalidFile = __DIR__ . '/../Fixtures/Unformated.php';
 
         $input = $this->input;
         $input->setArgument('files', serialize([$invalidFile]));
 
-        $command = new PhplintCommand();
+        $command = new PhpcsCommand();
 
-        $this->setExpectedException(
+        $this->setExpectedExceptionRegExp(
             'RuntimeException',
-            'PHP Parse error:  syntax error, unexpected end of file, expecting \',\' or \';\' in ' . $invalidFile . ' on line 3'
+            '/FOUND 5 ERROR\(S\) AFFECTING 4 LINE\(S\)/'
         );
 
         $command->run($input, $this->output);
@@ -39,7 +39,7 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testRunWithoutPhpFiles()
     {
-        $this->runWithoutPhpFiles(new PhplintCommand());
+        $this->runWithoutPhpFiles(new PhpcsCommand());
     }
 
     /**
@@ -47,7 +47,7 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testConfigure()
     {
-        $command = new PhplintCommand();
-        $this->assertEquals('phplint', $command->getName());
+        $command = new PhpcsCommand();
+        $this->assertEquals('phpcs', $command->getName());
     }
 }

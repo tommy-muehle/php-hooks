@@ -7,19 +7,22 @@ use PhpHooks\Tests\CommandTestCase;
 
 /**
  * Class ForbiddenCommandTest
+ *
+ * @coversDefaultClass \PhpHooks\Command\ForbiddenCommand
  * @package PhpHooks\Tests\Command
  */
 class ForbiddenCommandTest extends CommandTestCase
 {
     /**
-     * @covers \PhpHooks\Command\ForbiddenCommand::run
+     * @covers ::run
+     * @covers \PhpHooks\Abstracts\BaseCommand::doExecute
      */
     public function testRun()
     {
         $invalidFile = __DIR__ . '/../Fixtures/Debug.php';
 
         $input = $this->input;
-        $input->setArgument('files', [$invalidFile]);
+        $input->setArgument('files', serialize([$invalidFile]));
 
         $command = new ForbiddenCommand();
 
@@ -29,5 +32,22 @@ class ForbiddenCommandTest extends CommandTestCase
         );
 
         $command->run($input, $this->output);
+    }
+
+    /**
+     * @covers ::run
+     */
+    public function testRunWithoutInvalidFile()
+    {
+        $this->runWithoutPhpFiles(new ForbiddenCommand());
+    }
+
+    /**
+     * @covers ::configure
+     */
+    public function testConfigure()
+    {
+        $command = new ForbiddenCommand();
+        $this->assertEquals('forbidden', $command->getName());
     }
 }

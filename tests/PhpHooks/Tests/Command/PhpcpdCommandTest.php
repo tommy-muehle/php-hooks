@@ -2,16 +2,16 @@
 
 namespace PhpHooks\Tests\Command;
 
-use PhpHooks\Command\PhplintCommand;
+use PhpHooks\Command\PhpcpdCommand;
 use PhpHooks\Tests\CommandTestCase;
 
 /**
- * Class PhplintCommandTest
+ * Class PhpcpdCommandTest
  *
- * @coversDefaultClass \PhpHooks\Command\PhplintCommand
+ * @coversDefaultClass \PhpHooks\Command\PhpcpdCommand
  * @package PhpHooks\Tests\Command
  */
-class PhplintCommandTest extends CommandTestCase
+class PhpcpdCommandTest extends CommandTestCase
 {
     /**
      * @covers ::run
@@ -19,16 +19,16 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testRun()
     {
-        $invalidFile = __DIR__ . '/../Fixtures/Invalid.php';
+        $invalidFile = __DIR__ . '/../Fixtures/Duplicated.php';
 
         $input = $this->input;
         $input->setArgument('files', serialize([$invalidFile]));
 
-        $command = new PhplintCommand();
+        $command = new PhpcpdCommand();
 
-        $this->setExpectedException(
+        $this->setExpectedExceptionRegExp(
             'RuntimeException',
-            'PHP Parse error:  syntax error, unexpected end of file, expecting \',\' or \';\' in ' . $invalidFile . ' on line 3'
+            '/43\.70\% duplicated lines out of 135 total lines of code/'
         );
 
         $command->run($input, $this->output);
@@ -39,7 +39,7 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testRunWithoutPhpFiles()
     {
-        $this->runWithoutPhpFiles(new PhplintCommand());
+        $this->runWithoutPhpFiles(new PhpcpdCommand());
     }
 
     /**
@@ -47,7 +47,7 @@ class PhplintCommandTest extends CommandTestCase
      */
     public function testConfigure()
     {
-        $command = new PhplintCommand();
-        $this->assertEquals('phplint', $command->getName());
+        $command = new PhpcpdCommand();
+        $this->assertEquals('phpcpd', $command->getName());
     }
 }
