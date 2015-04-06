@@ -5,6 +5,7 @@ PhpHooks
 [![Build Status](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/build.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/?branch=master)
 [![Code Climate](https://codeclimate.com/github/tommy-muehle/php-hooks/badges/gpa.svg)](https://codeclimate.com/github/tommy-muehle/php-hooks)
+[![Test Coverage](https://codeclimate.com/github/tommy-muehle/php-hooks/badges/coverage.svg)](https://codeclimate.com/github/tommy-muehle/php-hooks)
 
 PhpHooks is a collection of some useful [__customizable__](#customize) checks that you can use 
 as [git pre-commit hook](http://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) before you commit some changes.
