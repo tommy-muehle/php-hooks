@@ -2,10 +2,11 @@ language: php
 php:
   - "5.5"
   - "5.6"
-env:
-  - CODECLIMATE_REPO_TOKEN=95709d9316a0acbb6b9f80daf8c28510a36bf863e6d7633d453ed9ec589d7f50
+addons:
+  code_climate:
+    repo_token: 95709d9316a0acbb6b9f80daf8c28510a36bf863e6d7633d453ed9ec589d7f50
 before_script:
   - composer install
 after_success:
-  - ./vendor/bin/test-reporter
-script: phpunit
+  - vendor/bin/test-reporter
+script: phpunit --coverage-clover build/logs/clover.xml
