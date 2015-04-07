@@ -28,7 +28,7 @@ class PhpcsCommandTest extends CommandTestCase
 
         $this->setExpectedExceptionRegExp(
             'RuntimeException',
-            '/FOUND 5 ERROR\(S\) AFFECTING 4 LINE\(S\)/'
+            '/FOUND 5 ERRORS AFFECTING 4 LINES/'
         );
 
         $command->run($input, $this->output);
