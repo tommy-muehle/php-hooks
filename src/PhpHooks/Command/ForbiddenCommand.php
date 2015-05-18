@@ -35,8 +35,11 @@ class ForbiddenCommand extends BaseCommand
         $files = unserialize($input->getArgument('files'));
 
         foreach ($files as $file) {
-            foreach ($configuration['forbidden']['methods'] as $method) {
+            if (substr($file, -4, 4) !== '.php') {
+                continue;
+            }
 
+            foreach ($configuration['forbidden']['methods'] as $method) {
                 $pattern = $method . '(';
                 $content = file_get_contents($file);
 

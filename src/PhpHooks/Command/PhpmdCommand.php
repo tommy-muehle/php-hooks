@@ -47,7 +47,7 @@ class PhpmdCommand extends BaseCommand
             $processBuilder
                 ->add($file)
                 ->add('text')
-                ->add($configuration['phpmd']['ruleset']);
+                ->add(preg_replace('/\s+/', null, $configuration['phpmd']['ruleset']));
 
             $this->doExecute($processBuilder);
         }
