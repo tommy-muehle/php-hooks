@@ -1,12 +1,18 @@
 language: php
+sudo: false
 php:
-  - "5.5"
-  - "5.6"
+  - 5.5
+  - 5.6
+  - 7.0
 addons:
   code_climate:
     repo_token: 95709d9316a0acbb6b9f80daf8c28510a36bf863e6d7633d453ed9ec589d7f50
-before_script:
-  - composer install
+before_install:
+  - composer self-update
+install:
+  - composer install --no-interaction --prefer-source
 after_success:
   - bin/test-reporter
 script: phpunit --coverage-clover build/logs/clover.xml
+notifications:
+  email: false
