@@ -87,5 +87,7 @@ So you can customize the checks with using a ".pre-commit.yml" file in your proj
     forbidden:
       # Add here methods that not allowed to commit like var_dump
       methods: ["evalMethod", "printEvalResults"]
+      # Add filenames to exclude from forbidden check
+      exclude: ["filename1.php","filename2.php"]
     phpunit:
       configuration: /path/to/phpunit.xml
