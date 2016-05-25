@@ -23,7 +23,7 @@ $app->setFiles(GitUtility::extractFiles());
 $configurationFile = GitUtility::getGitDir() . DIRECTORY_SEPARATOR . '.pre-commit.yml';
 
 if (file_exists($configurationFile)) {
-    $configuration = Yaml::parse($configurationFile);
+    $configuration = Yaml::parse(file_get_contents($configurationFile));
     $app->getConfiguration()->merge($configuration);
 }
 

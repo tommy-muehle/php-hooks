@@ -20,7 +20,7 @@
     "phpmd/phpmd" : "@stable",
     "sebastian/phpcpd": "2.0.2",
     "squizlabs/php_codesniffer": "@stable",
-    "phpunit/phpunit": "@stable",
+    "phpunit/phpunit": "^4.8",
     "sensiolabs/security-checker": "@stable"
   },
   "require-dev": {
