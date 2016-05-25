@@ -36,10 +36,25 @@ class GitUtility
         }
         exec($getDiffCommand, $output);
 
-        $files = array_map(function($v) {
+        $files = array_map(function ($v) {
             $file = trim(preg_replace('/^([ACMR]{1})\s{1,}/', '', $v));
             return self::getGitDir() . DIRECTORY_SEPARATOR . $file;
         }, $output);
+
+        return $files;
+    }
+
+    /**
+     * Extract staged and unstaged files
+     *
+     * @return array
+     */
+    public static function extractAllFiles()
+    {
+        $unstagedFiles = self::extractFiles(false);
+        $stagedFiles = self::extractFiles();
+
+        $files = array_merge($stagedFiles, $unstagedFiles);
 
         return $files;
     }
