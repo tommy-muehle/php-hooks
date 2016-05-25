@@ -25,10 +25,16 @@ class GitUtility
      *
      * @return array
      */
-    public static function extractFiles()
+    public static function extractFiles($onlyStaged = true)
     {
         $output = array();
-        exec("git diff --cached --name-status --diff-filter=ACMR", $output);
+
+        $getDiffCommand = 'git diff --name-status --diff-filter=ACMR';
+
+        if ($onlyStaged === true) {
+            $getDiffCommand = 'git diff --cached --name-status --diff-filter=ACMR';
+        }
+        exec($getDiffCommand, $output);
 
         $files = array_map(function($v) {
             $file = trim(preg_replace('/^([ACMR]{1})\s{1,}/', '', $v));
