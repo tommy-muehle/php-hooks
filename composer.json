@@ -1,14 +1,14 @@
 {
-  "name": "tm/php-hooks",
+  "name": "move-elevator/php-hooks",
   "description": "PhpHooks is a collection of some useful customizable checks that you can use as git pre-commit hook.",
   "keywords": [
     "git", "hooks"
   ],
   "authors": [
     {
-      "name": "Tommy Muehle",
-      "email": "tommy.muehle@gmail.com",
-      "homepage": "https://tommy-muehle.de"
+      "name": "move:elevator",
+      "email": "cms-dev@move-elevator.de",
+      "homepage": "http://www.move-elevator.de"
     }
   ],
   "license": "MIT",
@@ -37,9 +37,9 @@
     }
   },
   "support": {
-    "email": "tommy.muehle@gmail.com",
-    "source": "https://github.com/tommy-muehle/php-hooks",
-    "issues": "https://github.com/tommy-muehle/php-hooks/issues"
+    "email": "cms-dev@move-elevator.de",
+    "source": "https://github.com/move-elevator/php-hooks",
+    "issues": "https://github.com/move-elevator/php-hooks/issues"
   },
   "config": {
     "bin-dir": "bin"
