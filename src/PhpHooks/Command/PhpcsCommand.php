@@ -40,6 +40,10 @@ class PhpcsCommand extends BaseCommand
             ->setPrefix(__DIR__ . '/../../../bin/phpcs')
             ->add(sprintf('--standard=%s', $configuration['phpcs']['standard']));
 
+        if (!empty($configuration['phpcs']['exclude'])) {
+            $processBuilder->add(sprintf('--ignore=%s', $configuration['phpcs']['exclude']));
+        }
+
         foreach ($files as $file) {
             if (substr($file, -4, 4) !== '.php') {
                 continue;
