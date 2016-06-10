@@ -53,6 +53,11 @@ class PhpmdCommand extends BaseCommand
                 ->add('text')
                 ->add(preg_replace('/\s+/', null, $configuration['phpmd']['ruleset']));
 
+            if (!empty($configuration['phpmd']['exclude'])) {
+                $processBuilder->add('--exclude');
+                $processBuilder->add(sprintf('%s', $configuration['phpmd']['exclude']));
+            }
+
             $this->doExecute($processBuilder);
         }
     }
