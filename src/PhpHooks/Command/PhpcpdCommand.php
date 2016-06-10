@@ -24,16 +24,26 @@ class PhpcpdCommand extends BaseCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
+        /* @var $configuration Configuration */
+        $configuration = unserialize($input->getArgument('configuration'));
+
         $processBuilder = new ProcessBuilder();
         $processBuilder
             ->setPrefix(__DIR__ . '/../../../bin/phpcpd');
+
+        if (!empty($configuration['phpcpd']['exclude']) && is_array($configuration['phpcpd']['exclude'])) {
+            foreach ($configuration['phpcpd']['exclude'] as $exclude) {
+                $processBuilder->add(sprintf('--exclude'));
+                $processBuilder->add(sprintf('%s', $exclude));
+            }
+        }
 
         $files = unserialize($input->getArgument('files'));
 
@@ -42,7 +52,8 @@ class PhpcpdCommand extends BaseCommand
                 continue;
             }
 
-            $processBuilder->add($file);
+            $processBuilder->add(dirname($file));
+
             $this->doExecute($processBuilder);
         }
     }
