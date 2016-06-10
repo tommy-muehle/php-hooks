@@ -5,7 +5,20 @@ if (false === function_exists('exec')) {
     throw new \RuntimeException('The function "exec" must be enabled!');
 }
 
-$loader = __DIR__ . '/../vendor/autoload.php';
+/**
+ * @return string
+ */
+function getLoaderPath() {
+    $loader = __DIR__ . '/../../../autoload.php';
+
+    if (is_readable($loader)) {
+        return $loader = __DIR__ . '/../../../autoload.php';
+    }
+
+    return $loader = __DIR__ . '/../vendor/autoload.php';
+}
+
+$loader = getLoaderPath();
 
 if (false === file_exists($loader)) {
     throw new \Exception("Please do composer install first!");

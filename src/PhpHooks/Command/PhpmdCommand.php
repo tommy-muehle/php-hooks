@@ -3,6 +3,7 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -24,20 +25,23 @@ class PhpmdCommand extends BaseCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        /* @var $configuration \PhpHooks\Configuration */
+        /* @var $configuration Configuration */
         $configuration = unserialize($input->getArgument('configuration'));
+
         $files = unserialize($input->getArgument('files'));
+
+        $commandPath = $this->getCommandPathByConfiguration($configuration);
 
         $processBuilder = new ProcessBuilder();
         $processBuilder
-            ->setPrefix(__DIR__ . '/../../../bin/phpmd');
+            ->setPrefix($commandPath);
 
         foreach ($files as $file) {
             if (substr($file, -4, 4) !== '.php') {
@@ -51,5 +55,27 @@ class PhpmdCommand extends BaseCommand
 
             $this->doExecute($processBuilder);
         }
+    }
+
+    /**
+     * @param array $configuration
+     * @return bool
+     */
+    protected function isConfigurationFileExists($configuration)
+    {
+        return isset($configuration['phpmd']['configuration']) && is_readable($configuration['phpmd']['configuration']);
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @return string
+     */
+    protected function getCommandPathByConfiguration($configuration)
+    {
+        if (empty($configuration['phpmd']['command']) || !is_executable($configuration['phpmd']['command'])) {
+            return __DIR__ . '/../../../bin/phpmd';
+        }
+
+        return $configuration['phpmd']['command'];
     }
 }
