@@ -1,0 +1,12 @@
+phpmd:
+  # Add here other or more rulesets (comma separated or as xml-file)
+  ruleset: cleancode, codesize, controversial, design, naming, unusedcode
+forbidden:
+  # Add here methods that not allowed to commit like var_dump
+  methods: ["var_dump","die"]
+phpcs:
+  # Add here your own standard (path) or set a default like PSR1
+  standard: PSR2
+phpunit:
+  # Add cofniguration xml
+  configuration: phpunit.xml
