@@ -28,7 +28,7 @@ class PhpcpdCommandTest extends CommandTestCase
 
         $this->setExpectedExceptionRegExp(
             'RuntimeException',
-            '/43\.70\% duplicated lines out of 135 total lines of code/'
+            '/27\.57\% duplicated lines out of 214 total lines of code/'
         );
 
         $command->run($input, $this->output);
