@@ -63,15 +63,6 @@ class PhpmdCommand extends BaseCommand
     }
 
     /**
-     * @param array $configuration
-     * @return bool
-     */
-    protected function isConfigurationFileExists($configuration)
-    {
-        return isset($configuration['phpmd']['configuration']) && is_readable($configuration['phpmd']['configuration']);
-    }
-
-    /**
      * @param Configuration $configuration
      * @return string
      */
