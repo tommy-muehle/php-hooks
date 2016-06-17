@@ -24,6 +24,8 @@ class SecurityCheckerCommand extends BaseCommand
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param InputInterface  $input
      * @param OutputInterface $output
      *

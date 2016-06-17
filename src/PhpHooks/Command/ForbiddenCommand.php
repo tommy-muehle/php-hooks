@@ -3,6 +3,7 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,19 +24,21 @@ class ForbiddenCommand extends BaseCommand
     }
 
     /**
-     * @param InputInterface $input
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        /* @var $configuration \PhpHooks\Configuration */
+        /** @var Configuration $configuration */
         $configuration = unserialize($input->getArgument('configuration'));
         $files = unserialize($input->getArgument('files'));
 
         foreach ($files as $file) {
-            if (substr($file, -4, 4) !== '.php' || $this->checkExcludeFile($file, $configuration['forbidden'])) {
+            if (substr($file, -4, 4) !== '.php' || $this->isExcludedFile($file, $configuration['forbidden'])) {
                 continue;
             }
 
@@ -56,22 +59,12 @@ class ForbiddenCommand extends BaseCommand
 
     /**
      * @param string $filePath
-     * @param array $configuration
+     * @param array  $configuration
+     *
      * @return bool
      */
-    protected function checkExcludeFile($filePath, array $configuration)
+    protected function isExcludedFile($filePath, array $configuration)
     {
-        if (empty($configuration['exclude']) || !is_array($configuration['exclude'])) {
-            return false;
-        }
-
-        $currentFileName = basename($filePath);
-        foreach ($configuration['exclude'] as $fileName) {
-            if ($currentFileName === $fileName) {
-                return true;
-            }
-        }
-
-        return false;
+        return in_array(basename($filePath), $configuration['exclude']);
     }
 }

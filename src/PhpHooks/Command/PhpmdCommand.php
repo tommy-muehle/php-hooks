@@ -25,6 +25,8 @@ class PhpmdCommand extends BaseCommand
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      *
@@ -32,7 +34,7 @@ class PhpmdCommand extends BaseCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        /* @var $configuration Configuration */
+        /** @var Configuration $configuration */
         $configuration = unserialize($input->getArgument('configuration'));
 
         $files = unserialize($input->getArgument('files'));

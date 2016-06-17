@@ -3,6 +3,7 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -24,6 +25,8 @@ class PhpcsCommand extends BaseCommand
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
@@ -31,7 +34,7 @@ class PhpcsCommand extends BaseCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        /* @var $configuration \PhpHooks\Configuration */
+        /** @var Configuration $configuration */
         $configuration = unserialize($input->getArgument('configuration'));
         $files = unserialize($input->getArgument('files'));
 

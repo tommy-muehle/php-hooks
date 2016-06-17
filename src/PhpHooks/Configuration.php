@@ -29,7 +29,8 @@ class Configuration implements \ArrayAccess
         ],
         'forbidden' => [
             'enabled' => true,
-            'methods' => ['var_dump', 'print_r', 'die']
+            'methods' => ['var_dump', 'print_r', 'die'],
+            'exclude' => [],
         ],
         'phpunit' => [
             'enabled' => true,
@@ -48,7 +49,8 @@ class Configuration implements \ArrayAccess
     public function merge(array $configuration = [])
     {
         $this->configuration = $this->mergeConfigurationArrays(
-            $this->configuration, $configuration
+            $this->configuration,
+            $configuration
         );
     }
 

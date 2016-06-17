@@ -2,19 +2,14 @@
 
 namespace PhpHooks\Utility;
 
-use PhpHooks\Exception\InvalidParamException;
-
 /**
  * Class GitUtility
+ * Thanks to @sascha (https://github.com/sascha-seyfert)
  *
  * @package PhpHooks\Utility
  */
 class GitUtility
 {
-    const LIST_TYPE_UNTRACKED = 'untracked';
-    const LIST_TYPE_STAGED = 'staged';
-    const LIST_TYPE_UNSTAGE = 'unstaged';
-
     /**
      * @return string
      */
@@ -27,33 +22,51 @@ class GitUtility
     }
 
     /**
-     * Thanks to @sascha (https://github.com/sascha-seyfert)
-     *
-     * @param string $listType Valid list types are stage, unstaged and untracked
      * @return array
      */
-    public static function extractFiles($listType = 'staged')
+    public static function extractStagedFiles()
     {
         $output = array();
+        exec('git diff --cached --name-status --diff-filter=ACMR', $output);
 
-        switch ($listType) {
-            case self::LIST_TYPE_STAGED:
-                $getDiffCommand = 'git diff --cached --name-status --diff-filter=ACMR';
-                break;
-            case self::LIST_TYPE_UNSTAGE:
-                $getDiffCommand = 'git diff --name-status --diff-filter=ACMR';
-                break;
-            case self::LIST_TYPE_UNTRACKED:
-                $getDiffCommand = 'git clean --dry-run | awk \'{print $3;}\'';
-                break;
-            default:
-                throw new InvalidParamException('Invalid list type "' . $listType . '" to extract time!');
-        }
 
-        exec($getDiffCommand, $output);
+        return self::addPathToFiles($output);
+    }
 
-        $files = array_map(function ($v) {
-            $file = trim(preg_replace('/^([ACMR]{1})\s{1,}/', '', $v));
+    /**
+     * @return array
+     */
+    public static function extractUnstagedFiles()
+    {
+        $output = array();
+        exec('git diff --name-status --diff-filter=ACMR', $output);
+
+
+        return self::addPathToFiles($output);
+    }
+
+    /**
+     * @return array
+     */
+    public static function extractUntrackedFiles()
+    {
+        $output = array();
+        exec('git clean --dry-run | awk \'{print $3;}\'', $output);
+
+
+        return self::addPathToFiles($output);
+    }
+
+    /**
+     * Add absolutely path to filename
+     *
+     * @param array $output
+     * @return array
+     */
+    private static function addPathToFiles(array $output)
+    {
+        $files = array_map(function ($rawFileName) {
+            $file = trim(preg_replace('/^([ACMR]{1})\s{1,}/', '', $rawFileName));
             return self::getGitDir() . DIRECTORY_SEPARATOR . $file;
         }, $output);
 
@@ -61,15 +74,15 @@ class GitUtility
     }
 
     /**
-     * Extract staged and unstaged files
+     * Extract staged, unstaged and untracked files
      *
      * @return array
      */
     public static function extractAllFiles()
     {
-        $untrackedFiles = self::extractFiles(self::LIST_TYPE_UNTRACKED);
-        $unstagedFiles = self::extractFiles(self::LIST_TYPE_UNSTAGE);
-        $stagedFiles = self::extractFiles(self::LIST_TYPE_STAGED);
+        $untrackedFiles = self::extractUntrackedFiles();
+        $unstagedFiles = self::extractUnstagedFiles();
+        $stagedFiles = self::extractStagedFiles();
 
         $files = array_merge($stagedFiles, $unstagedFiles, $untrackedFiles);
 

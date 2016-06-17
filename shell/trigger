@@ -8,7 +8,8 @@ if (false === function_exists('exec')) {
 /**
  * @return string
  */
-function getLoaderPath() {
+function getLoaderPath()
+{
     $loader = __DIR__ . '/../../../autoload.php';
 
     if (is_readable($loader)) {
