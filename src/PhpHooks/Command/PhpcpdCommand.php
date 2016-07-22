@@ -43,8 +43,8 @@ class PhpcpdCommand extends BaseCommand
 
         if (!empty($configuration['phpcpd']['exclude']) && is_array($configuration['phpcpd']['exclude'])) {
             foreach ($configuration['phpcpd']['exclude'] as $exclude) {
-                $processBuilder->add(sprintf('--exclude'));
-                $processBuilder->add(sprintf('%s', $exclude));
+                $processBuilder->add('--exclude');
+                $processBuilder->add($exclude);
             }
         }
 
