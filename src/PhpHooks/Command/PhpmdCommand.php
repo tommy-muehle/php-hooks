@@ -78,7 +78,7 @@ class PhpmdCommand extends BaseCommand
     protected function getCommandPathByConfiguration($configuration)
     {
         if (empty($configuration['phpmd']['command']) || !is_executable($configuration['phpmd']['command'])) {
-            return '/usr/local/bin/php ' . __DIR__ . '/../../../bin/phpmd';
+            return __DIR__ . '/../../../bin/phpmd';
         }
 
         return $configuration['phpmd']['command'];
