@@ -30,7 +30,7 @@ class ForbiddenCommand extends BaseCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        /* @var $configuration \PhpHooks\Configuration */
+        /** @var Configuration $configuration */
         $configuration = unserialize($input->getArgument('configuration'));
         $files = unserialize($input->getArgument('files'));
 

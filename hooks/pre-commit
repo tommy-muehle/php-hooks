@@ -34,10 +34,16 @@ $app = new Application();
 $app->setFiles(GitUtility::extractFiles());
 
 $configurationFile = GitUtility::getGitDir() . DIRECTORY_SEPARATOR . '.pre-commit.yml';
+$configurationOverwriteFile = GitUtility::getGitDir() . DIRECTORY_SEPARATOR . '.pre-commit-overwrite.yml';
 
 if (file_exists($configurationFile)) {
     $configuration = Yaml::parse(file_get_contents($configurationFile));
     $app->getConfiguration()->merge($configuration);
+}
+
+if (file_exists($configurationOverwriteFile)) {
+    $configurationOverwrite = Yaml::parse(file_get_contents($configurationOverwriteFile));
+    $app->getConfiguration()->merge($configurationOverwrite);
 }
 
 $app->run();

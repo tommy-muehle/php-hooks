@@ -3,12 +3,14 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Factory\ProcessBuilderFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
 
 /**
  * Class PhpunitCommand
+ *
  * @package PhpHooks\Command
  */
 class PhpunitCommand extends BaseCommand
@@ -37,9 +39,13 @@ class PhpunitCommand extends BaseCommand
             return;
         }
 
-        $processBuilder = new ProcessBuilder();
+        /** @var ProcessBuilder $processBuilder */
+        $processBuilder = ProcessBuilderFactory::createByConfigurationAndCommand(
+            $configuration,
+            __DIR__ . '/../../../bin/phpunit'
+        );
+
         $processBuilder
-            ->setPrefix(__DIR__ . '/../../../bin/phpunit')
             ->add('--configuration')
             ->add($configuration['phpunit']['configuration']);
 

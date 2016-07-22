@@ -4,6 +4,7 @@ namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
 use PhpHooks\Configuration;
+use PhpHooks\Factory\ProcessBuilderFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -39,9 +40,8 @@ class PhpmdCommand extends BaseCommand
 
         $commandPath = $this->getCommandPathByConfiguration($configuration);
 
-        $processBuilder = new ProcessBuilder();
-        $processBuilder
-            ->setPrefix($commandPath);
+        /** @var ProcessBuilder $processBuilder */
+        $processBuilder = ProcessBuilderFactory::createByConfigurationAndCommand($configuration, $commandPath);
 
         foreach ($files as $file) {
             if (substr($file, -4, 4) !== '.php') {
@@ -78,7 +78,7 @@ class PhpmdCommand extends BaseCommand
     protected function getCommandPathByConfiguration($configuration)
     {
         if (empty($configuration['phpmd']['command']) || !is_executable($configuration['phpmd']['command'])) {
-            return __DIR__ . '/../../../bin/phpmd';
+            return '/usr/local/bin/php ' . __DIR__ . '/../../../bin/phpmd';
         }
 
         return $configuration['phpmd']['command'];

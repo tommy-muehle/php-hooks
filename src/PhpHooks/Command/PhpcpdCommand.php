@@ -3,6 +3,7 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Factory\ProcessBuilderFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -24,7 +25,7 @@ class PhpcpdCommand extends BaseCommand
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return void
@@ -34,9 +35,11 @@ class PhpcpdCommand extends BaseCommand
         /* @var $configuration Configuration */
         $configuration = unserialize($input->getArgument('configuration'));
 
-        $processBuilder = new ProcessBuilder();
-        $processBuilder
-            ->setPrefix(__DIR__ . '/../../../bin/phpcpd');
+        /** @var ProcessBuilder $processBuilder */
+        $processBuilder = ProcessBuilderFactory::createByConfigurationAndCommand(
+            $configuration,
+            __DIR__ . '/../../../bin/phpcpd'
+        );
 
         if (!empty($configuration['phpcpd']['exclude']) && is_array($configuration['phpcpd']['exclude'])) {
             foreach ($configuration['phpcpd']['exclude'] as $exclude) {

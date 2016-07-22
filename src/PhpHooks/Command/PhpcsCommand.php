@@ -3,6 +3,7 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Factory\ProcessBuilderFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -31,14 +32,17 @@ class PhpcsCommand extends BaseCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        /* @var $configuration \PhpHooks\Configuration */
+        /** @var Configuration $configuration */
         $configuration = unserialize($input->getArgument('configuration'));
         $files = unserialize($input->getArgument('files'));
 
-        $processBuilder = new ProcessBuilder();
-        $processBuilder
-            ->setPrefix(__DIR__ . '/../../../bin/phpcs')
-            ->add(sprintf('--standard=%s', $configuration['phpcs']['standard']));
+        /** @var ProcessBuilder $processBuilder */
+        $processBuilder = ProcessBuilderFactory::createByConfigurationAndCommand(
+            $configuration,
+            __DIR__ . '/../../../bin/phpcs'
+        );
+
+        $processBuilder->add(sprintf('--standard=%s', $configuration['phpcs']['standard']));
 
         if (!empty($configuration['phpcs']['exclude'])) {
             $processBuilder->add(sprintf('--ignore=%s', $configuration['phpcs']['exclude']));
