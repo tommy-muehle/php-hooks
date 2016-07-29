@@ -79,15 +79,26 @@ Every project has own requirements, standards, styles and so long.
 So you can customize the checks with using a ".pre-commit.yml" file in your project.
 
     phpmd:
-      # Add here other or more rulesets (comma separated)
-      ruleset: codesize
-    phpcs:
-      # Add here your own standard (path) or set a default like PSR1
-      standard: /path/to/my/standard
+      # Add here other or more rulesets (comma separated or as xml-file)
+      ruleset: phpmd.xml
+      # Add command path if external rules needed
+      command: /usr/local/bin/phpmd
+      # Add excluded folders
+      exclude: "vendor,example"
     forbidden:
       # Add here methods that not allowed to commit like var_dump
-      methods: ["evalMethod", "printEvalResults"]
-      # Add filenames to exclude from forbidden check
-      exclude: ["filename1.php","filename2.php"]
+      methods: ["var_dump","die"]
+    phpcs:
+      # Add here your own standard (path) or set a default like PSR1
+      standard: PSR2
+      # Add excluded folders
+      exclude: "*/Resources/*,*/vendor/*,*/example/*"
     phpunit:
-      configuration: /path/to/phpunit.xml
+      # Add cofniguration xml
+      configuration: phpunit.xml
+    phpcpd:
+      # Add excluded folders
+      exclude: ["example","vendor"]
+    environment:
+      # path to php binary
+      php_binary: /usr/local/bin/php

@@ -3,6 +3,8 @@
 namespace PhpHooks\Command;
 
 use PhpHooks\Abstracts\BaseCommand;
+use PhpHooks\Factory\ProcessBuilderFactory;
+use PhpHooks\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
@@ -33,9 +35,14 @@ class PhplintCommand extends BaseCommand
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
-        $processBuilder = new ProcessBuilder();
+        /* @var $configuration Configuration */
+        $configuration = unserialize($input->getArgument('configuration'));
+
+        /** @var ProcessBuilder $processBuilder */
+        $processBuilder = ProcessBuilderFactory::createByConfiguration($configuration);
+
         $processBuilder
-            ->setPrefix('php')
+            ->setPrefix('/usr/local/bin/php')
             ->add('-l');
 
         $files = unserialize($input->getArgument('files'));
