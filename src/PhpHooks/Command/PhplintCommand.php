@@ -42,7 +42,6 @@ class PhplintCommand extends BaseCommand
         $processBuilder = ProcessBuilderFactory::createByConfiguration($configuration);
 
         $processBuilder
-            ->setPrefix('/usr/local/bin/php')
             ->add('-l');
 
         $files = unserialize($input->getArgument('files'));
