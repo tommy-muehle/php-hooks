@@ -1,13 +1,7 @@
 PhpHooks
 =========
 
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://travis-ci.org/tommy-muehle/php-hooks.svg?branch=master)](https://travis-ci.org/tommy-muehle/php-hooks)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tommy-muehle/php-hooks/?branch=master)
-[![Code Climate](https://codeclimate.com/github/tommy-muehle/php-hooks/badges/gpa.svg)](https://codeclimate.com/github/tommy-muehle/php-hooks)
-[![Test Coverage](https://codeclimate.com/github/tommy-muehle/php-hooks/badges/coverage.svg)](https://codeclimate.com/github/tommy-muehle/php-hooks)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/af85b325-519d-4d75-a3ff-b5ba9d62677c/small.png)](https://insight.sensiolabs.com/projects/af85b325-519d-4d75-a3ff-b5ba9d62677c)
-[![Dependency Status](https://gemnasium.com/tommy-muehle/php-hooks.svg)](https://gemnasium.com/tommy-muehle/php-hooks)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 PhpHooks is a collection of some useful [__customizable__](#customize) checks that you can use 
 as [git pre-commit hook](http://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) before you commit some changes.
