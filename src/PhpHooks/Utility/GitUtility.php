@@ -25,15 +25,36 @@ class GitUtility
      *
      * @return array
      */
-    public static function extractFiles()
+    public static function extractFiles($onlyStaged = true)
     {
         $output = array();
-        exec("git diff --cached --name-status --diff-filter=ACMR", $output);
 
-        $files = array_map(function($v) {
+        $getDiffCommand = 'git diff --name-status --diff-filter=ACMR';
+
+        if ($onlyStaged === true) {
+            $getDiffCommand = 'git diff --cached --name-status --diff-filter=ACMR';
+        }
+        exec($getDiffCommand, $output);
+
+        $files = array_map(function ($v) {
             $file = trim(preg_replace('/^([ACMR]{1})\s{1,}/', '', $v));
             return self::getGitDir() . DIRECTORY_SEPARATOR . $file;
         }, $output);
+
+        return $files;
+    }
+
+    /**
+     * Extract staged and unstaged files
+     *
+     * @return array
+     */
+    public static function extractAllFiles()
+    {
+        $unstagedFiles = self::extractFiles(false);
+        $stagedFiles = self::extractFiles();
+
+        $files = array_merge($stagedFiles, $unstagedFiles);
 
         return $files;
     }

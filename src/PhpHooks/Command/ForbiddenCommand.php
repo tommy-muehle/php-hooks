@@ -23,7 +23,7 @@ class ForbiddenCommand extends BaseCommand
     }
 
     /**
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      *
      * @return void
@@ -35,7 +35,7 @@ class ForbiddenCommand extends BaseCommand
         $files = unserialize($input->getArgument('files'));
 
         foreach ($files as $file) {
-            if (substr($file, -4, 4) !== '.php') {
+            if (substr($file, -4, 4) !== '.php' || $this->checkExcludeFile($file, $configuration['forbidden'])) {
                 continue;
             }
 
@@ -52,5 +52,26 @@ class ForbiddenCommand extends BaseCommand
                 );
             }
         }
+    }
+
+    /**
+     * @param string $filePath
+     * @param array $configuration
+     * @return bool
+     */
+    protected function checkExcludeFile($filePath, array $configuration)
+    {
+        if (empty($configuration['exclude']) || !is_array($configuration['exclude'])) {
+            return false;
+        }
+
+        $currentFileName = basename($filePath);
+        foreach ($configuration['exclude'] as $fileName) {
+            if ($currentFileName === $fileName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

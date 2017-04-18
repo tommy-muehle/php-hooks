@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+
+if (false === function_exists('exec')) {
+    throw new \RuntimeException('The function "exec" must be enabled!');
+}
+
+$loader = __DIR__ . '/../vendor/autoload.php';
+
+if (false === file_exists($loader)) {
+    throw new \Exception("Please do composer install first!");
+}
+
+require $loader;
+
+use PhpHooks\Utility\GitUtility;
+use PhpHooks\Application;
+use Symfony\Component\Yaml\Yaml;
+
+$app = new Application();
+$app->setFiles(GitUtility::extractAllFiles());
+
+$configurationFile = GitUtility::getGitDir() . DIRECTORY_SEPARATOR . '.pre-commit.yml';
+
+if (file_exists($configurationFile)) {
+    $configuration = Yaml::parse(file_get_contents($configurationFile));
+    $app->getConfiguration()->merge($configuration);
+}
+
+$app->run();
